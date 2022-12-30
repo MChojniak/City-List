@@ -1,0 +1,22 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="1" author="mchojniak" dbms="h2">
+        <createSequence
+                sequenceName="city_sequence"
+                startValue="2000"
+                incrementBy="1"
+                schemaName="public"
+        />
+        <createTable tableName="city"
+                     schemaName="public">
+            <column name="id" type="bigint" autoIncrement="true" defaultValueSequenceNext="city_sequence">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar"/>
+            <column name="photo_source" type="varchar"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
