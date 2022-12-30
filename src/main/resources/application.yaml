@@ -2,12 +2,32 @@ server:
   port: ${PORT:8089}
   servlet:
     context-path: /api/v1
+    session:
+      persistent: false
+
 spring:
+  datasource:
+    url: jdbc:h2:./db/kujondb
+    username: ${H2_USERNAME:sa}
+    password: ${H2_PASSWORD:sas}
   profiles:
     active: ${PROFILES:local}
+  h2:
+    console:
+      enabled: true
+  liquibase:
+    change-log: classpath:/db/changelog/changelog.xml
+    user: ${H2_USERNAME:sa}
+    password: ${H2_PASSWORD:sas}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
 logging:
   level:
     root: ${LOGGING_LEVEL:INFO}
+
 management:
   endpoint:
     health:
