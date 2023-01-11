@@ -3,6 +3,7 @@ package com.mchojniak.citylist;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -23,10 +24,15 @@ class CityService {
     private final CityRepository cityRepository;
     private static final int PAGE_SIZE = 5;
 
-    List<CityDto> getCities(int page) {
+    CityPageDto getCities(int page) {
         int pageNumber = Math.max(page, 0);
-        return mapToCityDtos(cityRepository.findAllCities(PageRequest.of(pageNumber, PAGE_SIZE,
-                Sort.by(Sort.Order.asc("name")))));
+        Page<City> cityPageList = cityRepository.findAll(
+                PageRequest.of(pageNumber, PAGE_SIZE,
+                        Sort.by(Sort.Order.asc("name"))));
+        List<CityDto> cityDtos = mapToCityDtos(cityPageList.getContent());
+        int totalPages = cityPageList.getTotalPages();
+
+        return new CityPageDto(cityDtos, totalPages);
     }
 
     CityDto getCity(Long id) throws EntityNotFoundException {
@@ -58,12 +64,8 @@ class CityService {
 
         return cityRepository.save(cityToSave).getId();
     }
-
-    public Integer getMaxPages() {
-        return cityRepository.getAmountOfRows() / PAGE_SIZE;
-    }
-
+    
     public List<CityDto> getCityByName(String name) {
-        return mapToCityDtos(cityRepository.findCityByName(name));
+        return mapToCityDtos(cityRepository.findByName(name));
     }
 }

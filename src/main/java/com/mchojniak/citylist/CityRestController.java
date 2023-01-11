@@ -21,14 +21,9 @@ import java.util.Objects;
 @RequiredArgsConstructor
 class CityRestController {
     private final CityService cityService;
-
-    @GetMapping("/max-pages")
-    public ResponseEntity<Integer> getMaxPages() {
-        return new ResponseEntity<>(cityService.getMaxPages(), HttpStatus.OK);
-    }
-
+    
     @GetMapping("/")
-    public ResponseEntity<List<CityDto>> getCities(@RequestParam(required = false) int page) {
+    public ResponseEntity<CityPageDto> getCities(@RequestParam(required = false) int page) {
         return new ResponseEntity<>(cityService.getCities(page), HttpStatus.OK);
     }
 
